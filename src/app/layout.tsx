@@ -14,23 +14,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Alex Martin | Développeur Fullstack",
+  title: "Portfolio Template | Professionnel & Créatif",
   description:
-    "Portfolio d'Alex Martin — Développeur Fullstack passionné par la création d'applications web modernes, performantes et accessibles.",
+    "Template de portfolio universel et moderne pour présenter vos projets, compétences, parcours et contact quel que soit votre domaine d'activité.",
   keywords: [
-    "développeur fullstack",
-    "portfolio",
-    "React",
-    "Next.js",
-    "Node.js",
-    "TypeScript",
+    "portfolio template",
+    "portfolio universel",
+    "portfolio professionnel",
+    "cv en ligne",
+    "freelance",
+    "créatif",
+    "template Next.js",
   ],
   icons: {
-    icon: "/profile.png",
+    icon: "/logo.svg",
   },
   openGraph: {
-    title: "Alex Martin | Développeur Fullstack",
-    description: "Portfolio d'un développeur fullstack passionné",
+    title: "Portfolio Template | Professionnel & Créatif",
+    description:
+      "Template de portfolio universel pour présenter n'importe quel profil professionnel.",
     type: "website",
   },
 };

@@ -19,6 +19,7 @@ import {
   Moon,
   Sun,
   Star,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -59,10 +60,14 @@ function TechIcon({ name }: { name: string }) {
     Linux:
       "M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.368 1.884 1.43.868.074 1.741-.332 2.538-.667.389-.164.78-.33 1.066-.46.469-.199.918-.285 1.199-.07.34.26.58.56.904.737.263.137.587.169.898.068.312-.098.553-.333.717-.607.326-.55.354-1.166.346-1.795a10.05 10.05 0 00-.116-1.534c.564-.475.879-1.086.973-1.773.094-.686-.029-1.414-.378-2.093-.699-1.36-2.083-2.56-3.292-3.54a7.8 7.8 0 00-.464-.352c.3-1.258.49-2.585.466-3.86-.029-1.636-.537-3.139-1.695-4.064C15.447.553 13.986.003 12.504 0z",
     "API REST":
-      "M4 6h2v2H4V6zm4 0h2v2H8V6zm4 0h2v2h-2V6zm4 0h2v2h-2V6zM4 10h2v2H4v-2zm4 0h2v2H8v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zM4 14h2v2H4v-2zm4 0h2v2H8v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z",
+      "M4 6h2v2H4V6zm4 0h2v2H8V6zm4 0h2v2h-2V6zm4 0h2v2h-2V6zM4 10h2v2H4v-2zm4 0h2v2H8v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z",
   };
   const d = iconMap[name];
-  if (!d) return null;
+  if (!d) {
+    return (
+      <span className="h-1.5 w-1.5 rounded-full bg-foreground/50" />
+    );
+  }
   return (
     <svg
       viewBox="0 0 24 24"
@@ -76,23 +81,63 @@ function TechIcon({ name }: { name: string }) {
 }
 
 /* ═══════════════ Animated Section Wrapper ═══════════════ */
+interface AnimatedSectionProps {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+  direction?: "up" | "down" | "left" | "right" | "none";
+  distance?: number;
+  duration?: number;
+  scale?: number;
+}
+
 function AnimatedSection({
   children,
   className = "",
   delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}) {
+  direction = "up",
+  distance = 35,
+  duration = 1.1,
+  scale = 0.96,
+}: AnimatedSectionProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
+
+  const getInitialPosition = () => {
+    switch (direction) {
+      case "up":
+        return { y: distance, x: 0 };
+      case "down":
+        return { y: -distance, x: 0 };
+      case "left":
+        return { x: distance, y: 0 };
+      case "right":
+        return { x: -distance, y: 0 };
+      case "none":
+        return { x: 0, y: 0 };
+    }
+  };
+
+  const initialPos = getInitialPosition();
+
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-      transition={{ duration: 0.6, delay, ease: "easeOut" }}
+      initial={{
+        opacity: 0,
+        scale,
+        ...initialPos,
+      }}
+      animate={
+        isInView
+          ? { opacity: 1, scale: 1, x: 0, y: 0 }
+          : { opacity: 0, scale, ...initialPos }
+      }
+      transition={{
+        duration,
+        delay,
+        ease: [0.16, 1, 0.3, 1],
+      }}
       className={className}
     >
       {children}
@@ -135,18 +180,17 @@ function Navbar() {
       initial={{ y: -80 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-background/80 backdrop-blur-xl border-b border-border/60 shadow-sm"
-          : "bg-transparent"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+        ? "bg-background/80 backdrop-blur-xl border-b border-border/60 shadow-sm"
+        : "bg-transparent"
+        }`}
     >
       <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
         <a
           href="#hero"
           className="text-base font-semibold tracking-tight text-foreground"
         >
-          eric<span className="text-foreground/40">.dev</span>
+          votre-nom<span className="text-foreground/40">.dev</span>
         </a>
 
         <div className="hidden items-center gap-1 md:flex">
@@ -234,7 +278,11 @@ function Navbar() {
 
 /* ═══════════════ Hero ═══════════════ */
 function HeroSection() {
-  const titles = ["Développeur Fullstack", "React & Node.js"];
+  const titles = [
+    "Expert & Consultant",
+    "Designer & Créatif",
+    "Développeur & Chef de Projet",
+  ];
   const [titleIndex, setTitleIndex] = useState(0);
 
   useEffect(() => {
@@ -268,7 +316,7 @@ function HeroSection() {
               className="mb-5 text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl"
             >
               Salut, je suis{" "}
-              <span className="text-foreground/90">Eric Kouta</span>
+              <span className="text-foreground/90">Votre Nom</span>
             </motion.h1>
 
             <motion.div
@@ -297,9 +345,8 @@ function HeroSection() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="mb-8 max-w-md leading-relaxed text-muted-foreground/80 mx-auto lg:mx-0"
             >
-              Je crée des applications web modernes et performantes avec React,
-              Next.js et Node.js. Passionné par le clean code et les interfaces
-              soignées.
+              Je conçois des projets sur-mesure, alliant créativité, stratégie
+              et performance pour répondre à vos besoins professionnels.
             </motion.p>
 
             <motion.div
@@ -329,17 +376,17 @@ function HeroSection() {
               {[
                 {
                   icon: Github,
-                  href: "https://github.com/Ericjason2",
+                  href: "https://github.com",
                   label: "GitHub",
                 },
                 {
                   icon: Linkedin,
-                  href: "https://www.linkedin.com/in/eric-kouta-246a62280/",
+                  href: "https://linkedin.com",
                   label: "LinkedIn",
                 },
                 {
                   icon: Mail,
-                  href: "mailto:erickouta6@gmail.com",
+                  href: "mailto:contact@exemple.com",
                   label: "Email",
                 },
               ].map((social) => (
@@ -368,14 +415,10 @@ function HeroSection() {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="relative flex-shrink-0"
           >
-            <div className="relative h-56 w-56 overflow-hidden rounded-2xl border border-border/60 shadow-lg sm:h-64 sm:w-64 lg:h-72 lg:w-72">
-              <Image
-                src="/profile.png"
-                alt="Eric Kouta"
-                fill
-                className="object-cover"
-                priority
-              />
+            <div className="relative flex h-56 w-56 items-center justify-center rounded-2xl border border-border/60 bg-gradient-to-b from-muted/80 via-muted/40 to-background p-6 shadow-xl sm:h-64 sm:w-64 lg:h-72 lg:w-72">
+              <div className="flex h-32 w-32 items-center justify-center rounded-full border border-border/80 bg-background/80 shadow-inner sm:h-36 sm:w-36 lg:h-40 lg:w-40">
+                <User className="h-16 w-16 text-muted-foreground/70 sm:h-20 sm:w-20 lg:h-22 lg:w-22" />
+              </div>
             </div>
           </motion.div>
         </div>
@@ -424,93 +467,98 @@ function ProjectImage({
 function ProjectsSection() {
   const skillGroups = [
     {
-      category: "Frontend",
-      techs: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
+      category: "Domaines d'expertise",
+      techs: ["Design UI/UX", "Gestion de Projet", "Stratégie Digitale", "Développement Web"],
     },
     {
-      category: "Backend",
-      techs: ["Node.js", "Express", "MongoDB", "SQLite", "API REST"],
+      category: "Outils & Logiciels",
+      techs: ["Figma", "React", "Next.js", "Suite Adobe", "Git"],
     },
-    { category: "Outils", techs: ["Git", "GitHub", "Vercel", "Linux"] },
+    {
+      category: "Savoir-faire",
+      techs: ["Méthodes Agiles", "Direction Artistique", "Analyse de Données", "Communication"],
+    },
   ];
 
   const projects = [
     {
-      title: "Portofolio",
-      description: "Portofolio moderne et responsive",
-      image: "/portfolio.png",
+      title: "Plateforme Digital & Design System",
+      description:
+        "Conception complète d'un produit numérique intégrant une interface utilisateur moderne, un design system évolutif et une expérience utilisateur optimisée.",
+      image:
+        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=500&fit=crop",
       tags: [
+        "Design System",
+        "UI/UX",
         "Next.js",
         "TypeScript",
         "Tailwind CSS",
-        "Shadcn/ui",
-        "Framer Motion",
-        "Lucide React",
-        "EmailJS",
       ],
       github: "https://github.com",
       demo: "https://example.com",
       featured: true,
     },
     {
-      title: "Dashboard Analytics",
+      title: "Plateforme de Formation & E-Learning",
       description:
-        "Dashboard de gestion de données avec graphiques interactifs et API REST. Application React avec backend Express connecté à MongoDB.",
+        "Application d'apprentissage en ligne moderne et responsive offrant une expérience utilisateur fluide pour consulter des contenus et suivre sa progression.",
       image:
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=500&fit=crop",
-      tags: ["React", "Express", "MongoDB", "API REST", "Tailwind CSS"],
-      github: "https://github.com",
-      demo: "https://example.com",
-      featured: true,
-    },
-    {
-      title: "Taskflow",
-      description:
-        "Application de gestion de projets collaboratifs (MVP) avec inscription, authentification, websockets et dashboards. Responsive design soigné.",
-      image: "/dashboard.png",
+        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=500&fit=crop",
       tags: [
+        "E-Learning",
         "React",
-        "Vite",
-        "NodeJs",
-        "Express",
-        "Socket.io",
-        "SQL Lite",
-        "Sequelize",
-        "CSS Variables",
+        "Node.js",
+        "UX Research",
       ],
       github: "https://github.com",
       demo: "https://example.com",
       featured: true,
     },
     {
-      title: "Blog Personnel",
+      title: "Gestionnaire de Projets Collaboratif",
       description:
-        "Blog statique avec système de gestion de contenu, recherche et balisage SEO optimisé. Construit avec Next.js et déployé sur Vercel.",
+        "Outil de productivité avec organisation visuelle, suivi en temps réel, assignation de tâches et tableau de bord de performance.",
+      image:
+        "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=800&h=500&fit=crop",
+      tags: [
+        "Gestion de Projet",
+        "Agile",
+        "React",
+        "PostgreSQL",
+      ],
+      github: "https://github.com",
+      demo: "https://example.com",
+      featured: true,
+    },
+    {
+      title: "Site Vitrine & CMS de Marque",
+      description:
+        "Site web élégant avec système de gestion de contenu, recherche instantanée et optimisation SEO complète pour maximiser la visibilité.",
       image:
         "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&h=500&fit=crop",
-      tags: ["Next.js", "TypeScript", "Tailwind CSS", "Vercel"],
+      tags: ["Branding", "Next.js", "SEO", "Design"],
       github: "https://github.com",
       demo: "https://example.com",
       featured: false,
     },
     {
-      title: "API Microservices",
+      title: "Audit & Architecture de Services",
       description:
-        "Architecture microservices avec Node.js/Express. Authentification JWT, rate limiting, documentation Swagger et déployé sur Vercel.",
+        "Analyse approfondie des besoins, modélisation de solutions structurées et intégration de services sécurisés et performants.",
       image:
         "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=500&fit=crop",
-      tags: ["Node.js", "Express", "SQLite", "API REST", "Git"],
+      tags: ["Audit", "API REST", "Architecture", "Sécurité"],
       github: "https://github.com",
       demo: "https://example.com",
       featured: false,
     },
     {
-      title: "Landing Page SaaS",
+      title: "Landing Page & Campagne Digitale",
       description:
-        "Page d'atterrissage responsive pour un produit SaaS avec animations fluides, formulaires de contact et intégrations analytiques.",
+        "Page d'atterrissage responsive conçue pour maximiser l'engagement et la conversion avec visuels soignés et formulaires interactifs.",
       image:
         "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=500&fit=crop",
-      tags: ["React", "Tailwind CSS", "Responsive"],
+      tags: ["Marketing", "React", "Tailwind CSS", "Analytics"],
       github: "https://github.com",
       demo: "https://example.com",
       featured: false,
@@ -529,20 +577,24 @@ function ProjectsSection() {
               Ce que je fais
             </h2>
             <p className="leading-relaxed text-muted-foreground">
-              Je suis développeur fullstack spécialisé dans la création
-              d&apos;applications web modernes. Du frontend soigné au backend
-              solide, je conçois des solutions complètes et performantes. Chaque
-              projet est l&apos;occasion de produire du code propre, bien
-              structuré et pensé pour évoluer.
+              Découvrez une sélection de mes réalisations les plus marquantes.
+              Qu&apos;il s&apos;agisse de projets créatifs, d&apos;études de cas ou
+              de missions stratégiques, chaque projet reflète mon savoir-faire et
+              mon engagement.
             </p>
           </div>
         </AnimatedSection>
 
         {/* Skills overview (compact badges) */}
-        <AnimatedSection delay={0.05}>
-          <div className="mb-10 space-y-4">
-            {skillGroups.map((group) => (
-              <div key={group.category}>
+        <div className="mb-10 space-y-4">
+          {skillGroups.map((group, groupIdx) => (
+            <AnimatedSection
+              key={group.category}
+              delay={0.05 + groupIdx * 0.08}
+              direction="up"
+              distance={25}
+            >
+              <div>
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   {group.category}
                 </p>
@@ -558,17 +610,16 @@ function ProjectsSection() {
                   ))}
                 </div>
               </div>
-            ))}
-          </div>
-        </AnimatedSection>
+            </AnimatedSection>
+          ))}
+        </div>
 
         <AnimatedSection delay={0.1}>
           <div className="mb-12 flex items-start gap-3 rounded-xl border border-border/40 bg-muted/50 p-4">
             <MonitorSmartphone className="mt-0.5 h-4 w-4 flex-shrink-0 text-foreground/60" />
             <p className="text-xs leading-relaxed text-muted-foreground">
-              Chaque projet est pensé mobile-first. L&apos;interface
-              s&apos;adapte parfaitement à tous les écrans, du smartphone au
-              desktop.
+              Chaque réalisation est conçue avec soin. L&apos;expérience utilisateur
+              et la présentation sont optimisées pour tous les supports.
             </p>
           </div>
         </AnimatedSection>
@@ -579,8 +630,8 @@ function ProjectsSection() {
               Projets réalisés
             </h3>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              Une sélection de projets sur lesquels j&apos;ai travaillé, du
-              frontend au backend, en passant par la conception d&apos;API REST.
+              Une sélection représentative de projets menés avec succès, du
+              cadrage initial à la livraison finale.
             </p>
           </div>
         </AnimatedSection>
@@ -590,7 +641,13 @@ function ProjectsSection() {
           {projects
             .filter((p) => p.featured)
             .map((project, i) => (
-              <AnimatedSection key={project.title} delay={i * 0.12}>
+              <AnimatedSection
+                key={project.title}
+                delay={i * 0.12}
+                direction="up"
+                distance={40}
+                scale={0.97}
+              >
                 <Card className="overflow-hidden border-border/60 transition-shadow group hover:shadow-md">
                   <div className="grid gap-0 lg:grid-cols-2">
                     <div className="relative">
@@ -655,7 +712,13 @@ function ProjectsSection() {
           {projects
             .filter((p) => !p.featured)
             .map((project, i) => (
-              <AnimatedSection key={project.title} delay={0.05 + i * 0.08}>
+              <AnimatedSection
+                key={project.title}
+                delay={0.05 + i * 0.08}
+                direction="up"
+                distance={30}
+                scale={0.95}
+              >
                 <Card className="h-full overflow-hidden border-border/60 transition-shadow group hover:shadow-md">
                   <ProjectImage
                     src={project.image}
@@ -721,62 +784,57 @@ function ProjectsSection() {
 function ExperienceSection() {
   const experiences = [
     {
-      title: "Développeur Fullstack",
-      company: "IWOMI Technologies",
-      location: "Douala, Cameroun",
-      period: "Juillet 2025 — Septembre 2025",
+      title: "Consultant / Spécialiste Senior",
+      company: "Entreprise / Organisation",
+      location: "Paris, France (Remote)",
+      period: "2023 — Présent",
       description:
-        "Conception et développement d'applications web avec React/Next.js en frontend et initiation au backend avec Node.js/Express et à la gestion de bases de données MongoDB et SQLite. Déploiement sur Vercel et gestion de version avec Git/GitHub.",
+        "Pilotage de projets stratégiques, gestion des relations partenaires, conception de solutions innovantes et encadrement des opérations.",
       tags: [
-        "Next.js",
-        "React",
-        "Node.js",
-        "Express",
-        "SQL Lite",
-        "MongoDB",
-        "Tailwind CSS",
+        "Gestion de projet",
+        "Stratégie",
         "Design UI/UX",
+        "Développement",
+        "Agile",
       ],
       current: true,
     },
     {
-      title: "Développeur Web frontend",
-      company: "Luno Tech",
-      location: "Bafoussam, Cameroun",
-      period: "Mai 2024 — Juillet 2024",
+      title: "Chef de Projet / Designer",
+      company: "Studio / Agence",
+      location: "Lyon, France (Remote)",
+      period: "2022 — 2023",
       description:
-        "Développement de sites web pour des clients variés. Intégration de maquettes et création d'interfaces responsive. Collaboration avec les designers et product owners.",
-      tags: ["React", "HTML", "Javascript", "CSS", "Git", "MySQL"],
+        "Réalisation de livrables sur-mesure pour divers clients, de la phase de cadrage jusqu'à la livraison finale et le suivi qualité.",
+      tags: ["Branding", "UI/UX", "Conseil", "Communication"],
       current: false,
     },
     {
-      title: "Développeur Frontend",
-      company: "StartupLab",
+      title: "Chargé de Mission Junior",
+      company: "Organisation / Startup",
       location: "Bordeaux, France",
-      period: "2020 — 2021",
+      period: "2021 — 2022",
       description:
-        "Développement d'interfaces utilisateur avec React. Mise en place de composants réutilisables, gestion d'état et intégration d'API. Initiation au backend avec Node.js et Express.",
-      tags: ["React", "JavaScript", "Node.js", "Express", "CSS"],
+        "Participation active à la mise en œuvre des projets, résolution de problèmes opérationnels et contribution aux objectifs d'équipe.",
+      tags: ["Analyse", "Gestion", "Recherche"],
       current: false,
     },
   ];
 
   const education = [
     {
-      degree:
-        "Licence Technologique en Concepteur, développeur réseaux et internet",
-      school: "Institut Universitaire Fotso Victor",
-      period: "2023 — 2024",
-      description:
-        "Formation en Modélisation, bases de données, systèmes d'exploitation, développement web, intelligence artificielle, internet des objets, sécurité des systèmes. Projet de fin d'études : Conception d'un système de gestion de flux dans un établissement.",
-    },
-    {
-      degree:
-        "Brevet de Tehnicien Supérieur en Gestion des Systèmes d'informations",
-      school: "Ecoles Supérieures des Sciences et Technologies de Nkongsamba",
+      degree: "Master / Diplôme Supérieur",
+      school: "Grande École / Université",
       period: "2021 — 2023",
       description:
-        "Formation en Réseaux informatiques, Modélisations, systèmes d'exploitation. Projet de fin d'études : Configuration d'un réseau.",
+        "Spécialisation professionnelle, gestion de projets complexes, méthodologies avancées et conduite du changement.",
+    },
+    {
+      degree: "Licence / Diplôme Universitaire",
+      school: "Université / Établissement Supérieur",
+      period: "2018 — 2021",
+      description:
+        "Acquisition des fondamentaux académiques, travaux pratiques, analyse critique et gestion de projets fondamentaux.",
     },
   ];
 
@@ -792,9 +850,9 @@ function ExperienceSection() {
               Mon expérience
             </h2>
             <p className="leading-relaxed text-muted-foreground">
-              Mon parcours professionnel, de mes débuts en frontend
-              jusqu&apos;au développement fullstack d&apos;applications
-              complètes.
+              Mon parcours professionnel et académique, illustrant la diversité
+              de mes expériences et les compétences acquises au fil de ma
+              carrière.
             </p>
           </div>
         </AnimatedSection>
@@ -808,8 +866,13 @@ function ExperienceSection() {
               </h3>
             </AnimatedSection>
             <div className="space-y-5">
-              {education.map((edu) => (
-                <AnimatedSection key={edu.degree} delay={0.05}>
+              {education.map((edu, idx) => (
+                <AnimatedSection
+                  key={edu.degree}
+                  delay={0.05 + idx * 0.08}
+                  direction="up"
+                  distance={25}
+                >
                   <Card className="border-border/60 transition-shadow hover:shadow-sm">
                     <CardContent className="p-5">
                       <h4 className="text-sm font-semibold">{edu.degree}</h4>
@@ -840,14 +903,18 @@ function ExperienceSection() {
               <div className="absolute bottom-2 left-[11px] top-2 w-px bg-border" />
               <div className="space-y-8">
                 {experiences.map((exp, i) => (
-                  <AnimatedSection key={exp.company} delay={0.1 + i * 0.08}>
+                  <AnimatedSection
+                    key={exp.company}
+                    delay={0.1 + i * 0.1}
+                    direction="left"
+                    distance={35}
+                  >
                     <div className="relative pl-10">
                       <div
-                        className={`absolute left-0 top-2 h-[23px] w-[23px] rounded-full border-[3px] ${
-                          exp.current
-                            ? "border-background bg-foreground"
-                            : "border-border bg-background"
-                        }`}
+                        className={`absolute left-0 top-2 h-[23px] w-[23px] rounded-full border-[3px] ${exp.current
+                          ? "border-background bg-foreground"
+                          : "border-border bg-background"
+                          }`}
                       />
                       <Card className="border-border/60 transition-shadow hover:shadow-sm">
                         <CardContent className="p-5">
@@ -910,17 +977,38 @@ function ContactSection() {
       return;
     }
     setSending(true);
+
+    const serviceId =
+      process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "VOTRE_SERVICE_ID";
+    const templateId =
+      process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "VOTRE_TEMPLATE_ID";
+    const publicKey =
+      process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "VOTRE_PUBLIC_KEY";
+
+    if (
+      serviceId === "VOTRE_SERVICE_ID" ||
+      templateId === "VOTRE_TEMPLATE_ID" ||
+      publicKey === "VOTRE_PUBLIC_KEY"
+    ) {
+      toast.info(
+        "Mode template : configurez vos identifiants EmailJS pour activer l'envoi de messages réels.",
+      );
+      setSending(false);
+      setFormData({ name: "", email: "", subject: "", message: "" });
+      return;
+    }
+
     try {
       await emailjs.send(
-        "VOTRE_SERVICE_ID", // ← remplacer par ton Service ID
-        "VOTRE_TEMPLATE_ID", // ← remplacer par ton Template ID
+        serviceId,
+        templateId,
         {
           from_name: formData.name,
           from_email: formData.email,
           subject: formData.subject || "Nouveau message du portfolio",
           message: formData.message,
         },
-        "VOTRE_PUBLIC_KEY", // ← remplacer par ta Public Key
+        publicKey,
       );
       toast.success("Message envoyé avec succès ! Je vous répondrai sous 24h.");
       setFormData({ name: "", email: "", subject: "", message: "" });
@@ -945,39 +1033,45 @@ function ContactSection() {
               Travaillons ensemble
             </h2>
             <p className="leading-relaxed text-muted-foreground">
-              Vous avez un projet en tête ? Contactez-moi et discutons-en. Je
-              suis disponible pour des missions freelance ou des collaborations.
+              Vous avez un projet en tête ou souhaitez collaborer ?
+              Contactez-moi et discutons-en. Je suis disponible pour des
+              opportunités, des missions freelance ou des conseils.
             </p>
           </div>
         </AnimatedSection>
 
         <div className="grid gap-12 lg:grid-cols-5">
-          <AnimatedSection className="lg:col-span-2" delay={0.1}>
+          <AnimatedSection
+            className="lg:col-span-2"
+            delay={0.1}
+            direction="right"
+            distance={35}
+          >
             <div className="space-y-5">
               {[
                 {
                   icon: Mail,
                   label: "Email",
-                  value: "erickouta6@gmail.com",
-                  href: "mailto:erickouta6@gmail.com",
+                  value: "contact@exemple.com",
+                  href: "mailto:contact@exemple.com",
                 },
                 {
                   icon: MapPin,
                   label: "Localisation",
-                  value: "Douala, Cameroun",
+                  value: "Paris, France / Remote",
                   href: null,
                 },
                 {
                   icon: Github,
                   label: "GitHub",
-                  value: "github.com/Ericjason2",
-                  href: "https://github.com/Ericjason2",
+                  value: "github.com/votre-username",
+                  href: "https://github.com",
                 },
                 {
                   icon: Linkedin,
                   label: "LinkedIn",
-                  value: "linkedin.com/in/eric-kouta",
-                  href: "https://www.linkedin.com/in/eric-kouta-246a62280/",
+                  value: "linkedin.com/in/votre-profil",
+                  href: "https://linkedin.com",
                 },
               ].map((item) => (
                 <div
@@ -1009,7 +1103,12 @@ function ContactSection() {
             </div>
           </AnimatedSection>
 
-          <AnimatedSection className="lg:col-span-3" delay={0.2}>
+          <AnimatedSection
+            className="lg:col-span-3"
+            delay={0.2}
+            direction="left"
+            distance={35}
+          >
             <Card className="border-border/60">
               <CardContent className="p-6 sm:p-8">
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -1102,16 +1201,16 @@ function Footer() {
           href="#hero"
           className="text-sm font-semibold tracking-tight text-foreground"
         >
-          eric<span className="text-foreground/40">.dev</span>
+          votre-nom<span className="text-foreground/40">.dev</span>
         </a>
         <div className="flex gap-4">
           {[
-            { icon: Github, href: "https://github.com/Ericjason2" },
+            { icon: Github, href: "https://github.com" },
             {
               icon: Linkedin,
-              href: "https://www.linkedin.com/in/eric-kouta-246a62280/",
+              href: "https://linkedin.com",
             },
-            { icon: Mail, href: "mailto:erickout6@gmail.com" },
+            { icon: Mail, href: "mailto:contact@exemple.com" },
           ].map((s) => (
             <a
               key={s.href}
@@ -1125,7 +1224,7 @@ function Footer() {
           ))}
         </div>
         <p className="text-xs text-muted-foreground">
-          &copy; {new Date().getFullYear()} Eric KOUTA. Tous droits réservés.
+          &copy; {new Date().getFullYear()} Portfolio Template. Tous droits réservés.
         </p>
       </div>
     </footer>
@@ -1141,6 +1240,7 @@ export default function Home() {
       <ExperienceSection />
       <ContactSection />
       <Footer />
+      <Toaster richColors position="top-right" />
     </main>
   );
 }

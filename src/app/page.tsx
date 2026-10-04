@@ -64,9 +64,7 @@ function TechIcon({ name }: { name: string }) {
   };
   const d = iconMap[name];
   if (!d) {
-    return (
-      <span className="h-1.5 w-1.5 rounded-full bg-foreground/50" />
-    );
+    return <span className="h-1.5 w-1.5 rounded-full bg-foreground/50" />;
   }
   return (
     <svg
@@ -180,10 +178,11 @@ function Navbar() {
       initial={{ y: -80 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-        ? "bg-background/80 backdrop-blur-xl border-b border-border/60 shadow-sm"
-        : "bg-transparent"
-        }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-background/80 backdrop-blur-xl border-b border-border/60 shadow-sm"
+          : "bg-transparent"
+      }`}
     >
       <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
         <a
@@ -463,12 +462,17 @@ function ProjectImage({
   );
 }
 
-/* ═══════════════ Réalisations (Skills + Projects unified) ═══════════════ */
+/* ═══════════════ Réalisations  ═══════════════ */
 function ProjectsSection() {
   const skillGroups = [
     {
       category: "Domaines d'expertise",
-      techs: ["Design UI/UX", "Gestion de Projet", "Stratégie Digitale", "Développement Web"],
+      techs: [
+        "Design UI/UX",
+        "Gestion de Projet",
+        "Stratégie Digitale",
+        "Développement Web",
+      ],
     },
     {
       category: "Outils & Logiciels",
@@ -476,7 +480,12 @@ function ProjectsSection() {
     },
     {
       category: "Savoir-faire",
-      techs: ["Méthodes Agiles", "Direction Artistique", "Analyse de Données", "Communication"],
+      techs: [
+        "Méthodes Agiles",
+        "Direction Artistique",
+        "Analyse de Données",
+        "Communication",
+      ],
     },
   ];
 
@@ -487,13 +496,7 @@ function ProjectsSection() {
         "Conception complète d'un produit numérique intégrant une interface utilisateur moderne, un design system évolutif et une expérience utilisateur optimisée.",
       image:
         "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=500&fit=crop",
-      tags: [
-        "Design System",
-        "UI/UX",
-        "Next.js",
-        "TypeScript",
-        "Tailwind CSS",
-      ],
+      tags: ["Design System", "UI/UX", "Next.js", "TypeScript", "Tailwind CSS"],
       github: "https://github.com",
       demo: "https://example.com",
       featured: true,
@@ -504,12 +507,7 @@ function ProjectsSection() {
         "Application d'apprentissage en ligne moderne et responsive offrant une expérience utilisateur fluide pour consulter des contenus et suivre sa progression.",
       image:
         "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=500&fit=crop",
-      tags: [
-        "E-Learning",
-        "React",
-        "Node.js",
-        "UX Research",
-      ],
+      tags: ["E-Learning", "React", "Node.js", "UX Research"],
       github: "https://github.com",
       demo: "https://example.com",
       featured: true,
@@ -520,12 +518,7 @@ function ProjectsSection() {
         "Outil de productivité avec organisation visuelle, suivi en temps réel, assignation de tâches et tableau de bord de performance.",
       image:
         "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=800&h=500&fit=crop",
-      tags: [
-        "Gestion de Projet",
-        "Agile",
-        "React",
-        "PostgreSQL",
-      ],
+      tags: ["Gestion de Projet", "Agile", "React", "PostgreSQL"],
       github: "https://github.com",
       demo: "https://example.com",
       featured: true,
@@ -578,9 +571,9 @@ function ProjectsSection() {
             </h2>
             <p className="leading-relaxed text-muted-foreground">
               Découvrez une sélection de mes réalisations les plus marquantes.
-              Qu&apos;il s&apos;agisse de projets créatifs, d&apos;études de cas ou
-              de missions stratégiques, chaque projet reflète mon savoir-faire et
-              mon engagement.
+              Qu&apos;il s&apos;agisse de projets créatifs, d&apos;études de cas
+              ou de missions stratégiques, chaque projet reflète mon
+              savoir-faire et mon engagement.
             </p>
           </div>
         </AnimatedSection>
@@ -604,7 +597,6 @@ function ProjectsSection() {
                       key={tech}
                       className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-background px-3 py-1.5 text-xs font-medium text-foreground/80 transition-colors hover:bg-muted"
                     >
-                      <TechIcon name={tech} />
                       {tech}
                     </span>
                   ))}
@@ -618,8 +610,9 @@ function ProjectsSection() {
           <div className="mb-12 flex items-start gap-3 rounded-xl border border-border/40 bg-muted/50 p-4">
             <MonitorSmartphone className="mt-0.5 h-4 w-4 flex-shrink-0 text-foreground/60" />
             <p className="text-xs leading-relaxed text-muted-foreground">
-              Chaque réalisation est conçue avec soin. L&apos;expérience utilisateur
-              et la présentation sont optimisées pour tous les supports.
+              Chaque réalisation est conçue avec soin. L&apos;expérience
+              utilisateur et la présentation sont optimisées pour tous les
+              supports.
             </p>
           </div>
         </AnimatedSection>
@@ -911,10 +904,11 @@ function ExperienceSection() {
                   >
                     <div className="relative pl-10">
                       <div
-                        className={`absolute left-0 top-2 h-[23px] w-[23px] rounded-full border-[3px] ${exp.current
-                          ? "border-background bg-foreground"
-                          : "border-border bg-background"
-                          }`}
+                        className={`absolute left-0 top-2 h-[23px] w-[23px] rounded-full border-[3px] ${
+                          exp.current
+                            ? "border-background bg-foreground"
+                            : "border-border bg-background"
+                        }`}
                       />
                       <Card className="border-border/60 transition-shadow hover:shadow-sm">
                         <CardContent className="p-5">
@@ -1224,7 +1218,8 @@ function Footer() {
           ))}
         </div>
         <p className="text-xs text-muted-foreground">
-          &copy; {new Date().getFullYear()} Portfolio Template. Tous droits réservés.
+          &copy; {new Date().getFullYear()} Portfolio Template. Tous droits
+          réservés.
         </p>
       </div>
     </footer>
